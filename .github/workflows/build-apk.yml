@@ -25,9 +25,17 @@ jobs:
 
       - name: Initialize Web Wrapper
         run: |
+          mkdir www
+          # সব html, css, js এবং লোগো বা ইমেজ ফাইল www ফোল্ডারে কপি করার কমান্ড
+          cp *.html www/ 2>/dev/null || true
+          cp *.css www/ 2>/dev/null || true
+          cp *.js www/ 2>/dev/null || true
+          cp *.png www/ 2>/dev/null || true
+          cp *.jpg www/ 2>/dev/null || true
+          
           npm init -y
           npm install @capacitor/core @capacitor/cli
-          npx cap init "Free Blood Donation" "com.ebssherpur.bloodapp" --web-dir=.
+          npx cap init "Free Blood Donation" "com.ebssherpur.bloodapp" --web-dir=www
           npm install @capacitor/android
           npx cap add android
           npx cap sync
