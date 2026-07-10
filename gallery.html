@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gallery</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+}
+
+header{
+background:#d90429;
+color:#fff;
+text-align:center;
+padding:15px;
+}
+
+.container{
+width:95%;
+max-width:800px;
+margin:auto;
+padding:15px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:8px;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#d90429;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+.card{
+background:#fff;
+margin-top:15px;
+padding:10px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
+.card img{
+width:100%;
+border-radius:10px;
+}
+
+.delete{
+background:red;
+margin-top:10px;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<h2>Gallery Management</h2>
+</header>
+
+<div class="container">
+
+<input type="text" id="imageUrl" placeholder="Paste Image URL">
+
+<button onclick="addImage()">Add Image</button>
+
+<div id="galleryList"></div>
+
+</div>
+
+<script>
+
+function addImage(){
+
+let url=document.getElementById("imageUrl").value;
+
+if(url==""){
+alert("Enter Image URL");
+return;
+}
+
+let id=Date.now();
+
+db.ref("gallery/"+id).set({
+image:url
+});
+
+document.getElementById("imageUrl").value="";
+
+}
+
+db.ref("gallery").on("value",function(snapshot){
+
+let html="";
+
+snapshot.forEach(function(item){
+
+let data=item.val();
+let id=item.key;
+
+html+=`
+<div class="card">
+
+<img src="${data.image}">
+
+<button class="delete" onclick="deleteImage('${id}')">
+Delete
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("galleryList").innerHTML=html;
+
+});
+
+function deleteImage(id){
+
+db.ref("gallery/"+id).remove();
+
+alert("Image Deleted");
+
+}
+
+</script>
+
+</body>
+</html>

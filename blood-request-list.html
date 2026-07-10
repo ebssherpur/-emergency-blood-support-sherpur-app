@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood Request List</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+}
+
+header{
+    background:#d90429;
+    color:white;
+    padding:15px;
+    text-align:center;
+}
+
+.container{
+    width:95%;
+    max-width:700px;
+    margin:auto;
+    padding:15px;
+}
+
+.card{
+    background:white;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:15px;
+    box-shadow:0 2px 10px rgba(0,0,0,.2);
+}
+
+.card h3{
+    color:#d90429;
+    margin-top:0;
+}
+
+.card p{
+    margin:6px 0;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    margin:5px;
+}
+
+.accept{
+    background:green;
+}
+
+.reject{
+    background:red;
+}
+
+.call{
+    background:#0d6efd;
+}
+
+.status{
+    color:#d90429;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>🩸 Blood Request List</h2>
+</header>
+
+<div class="container">
+    <div id="requestList">Loading...</div>
+</div>
+
+<script>
+const db = firebase.database();
+const requestList = document.getElementById("requestList");
+  db.ref("bloodRequests").on("value", function(snapshot){
+
+    let html = "";
+
+    if(!snapshot.exists()){
+        requestList.innerHTML = "<h3 style='text-align:center'>No Blood Requests Found</h3>";
+        return;
+    }
+
+    snapshot.forEach(function(item){
+
+        const r = item.val();
+        const id = item.key;
+
+        html += `
+        <div class="card">
+
+            <h3>${r.patientName || ""}</h3>
+
+            <p><b>Blood Group:</b> ${r.bloodGroup || ""}</p>
+            <p><b>Hospital:</b> ${r.hospital || ""}</p>
+            <p><b>District:</b> ${r.district || ""}</p>
+            <p><b>Phone:</b> ${r.phone || ""}</p>
+            <p><b>Bags:</b> ${r.bags || ""}</p>
+            <p><b>Hemoglobin:</b> ${r.hemoglobin || ""}</p>
+            <p><b>Time:</b> ${r.time || ""}</p>
+            <p><b>Details:</b> ${r.details || ""}</p>
+
+            <p class="status">
+                Status : ${r.status || "Pending"}
+            </p>
+
+            <button class="accept" onclick="acceptRequest('${id}')">
+                ✅ Accept
+            </button>
+
+            <button class="reject" onclick="rejectRequest('${id}')">
+                ❌ Reject
+            </button>
+
+            <a href="tel:${r.phone}">
+                <button class="call">📞 Call Patient</button>
+            </a>
+
+        </div>
+        `;
+
+    });
+
+    requestList.innerHTML = html;
+
+});
+
+function acceptRequest(id){
+
+    db.ref("bloodRequests/" + id).once("value").then(function(snapshot){
+
+        const r = snapshot.val();
+
+        db.ref("bloodRequests/" + id).update({
+            status:"Accepted"
+        });
+
+        db.ref("notifications").push({
+            patientName:r.patientName,
+            bloodGroup:r.bloodGroup,
+            hospital:r.hospital,
+            district:r.district,
+            phone:r.phone,
+            bags:r.bags,
+            hemoglobin:r.hemoglobin,
+            details:r.details,
+            status:"Pending",
+            date:new Date().toLocaleString()
+        });
+
+        alert("Blood Request Accepted");
+
+    });
+
+}
+
+function rejectRequest(id){
+
+    db.ref("bloodRequests/" + id).update({
+        status:"Rejected"
+    });
+
+    alert("Blood Request Rejected");
+
+}
+
+</script>
+
+</body>
+</html>

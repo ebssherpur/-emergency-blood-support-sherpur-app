@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Live Chat</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#ece5dd;
+}
+
+.chat-header{
+background:#d90429;
+color:#fff;
+padding:15px;
+display:flex;
+align-items:center;
+gap:15px;
+position:fixed;
+top:0;
+left:0;
+right:0;
+z-index:100;
+}
+
+.chat-header img{
+width:45px;
+height:45px;
+border-radius:50%;
+border:2px solid #fff;
+}
+
+.chat-header h2{
+font-size:20px;
+}
+
+.chat-header p{
+font-size:13px;
+opacity:.9;
+}
+
+#messages{
+margin-top:80px;
+margin-bottom:80px;
+padding:15px;
+height:calc(100vh - 160px);
+overflow-y:auto;
+}
+
+.message{
+max-width:75%;
+padding:12px;
+margin:10px 0;
+border-radius:15px;
+word-wrap:break-word;
+}
+
+.me{
+background:#d90429;
+color:#fff;
+margin-left:auto;
+border-bottom-right-radius:5px;
+}
+
+.other{
+background:#fff;
+color:#000;
+margin-right:auto;
+border-bottom-left-radius:5px;
+box-shadow:0 2px 5px rgba(0,0,0,.1);
+}
+
+.time{
+font-size:12px;
+margin-top:5px;
+opacity:.7;
+}
+
+.chat-footer{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+display:flex;
+background:#fff;
+padding:10px;
+gap:10px;
+}
+
+.chat-footer input{
+flex:1;
+padding:12px;
+border:1px solid #ccc;
+border-radius:25px;
+outline:none;
+}
+
+.chat-footer button{
+padding:12px 20px;
+border:none;
+border-radius:25px;
+background:#d90429;
+color:#fff;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+  <div class="chat-header">
+
+<img src="https://i.imgur.com/6VBx3io.png">
+
+<div>
+
+<h2 id="chatName">Loading...</h2>
+
+<p id="status">🟢 Online</p>
+
+</div>
+
+</div>
+
+<div id="messages">
+
+</div>
+
+<div class="chat-footer">
+
+<input
+type="text"
+id="message"
+placeholder="Type a message...">
+
+<button onclick="sendMessage()">
+📤
+</button>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+
+<script>
+
+const params=new URLSearchParams(location.search);
+
+const receiver=params.get("user");
+
+const sender=localStorage.getItem("phone");
+
+const room=[sender,receiver].sort().join("_");
+
+const chatName=params.get("name");
+
+document.getElementById("chatName").innerHTML=
+chatName || receiver;
+  db.ref("chats/"+room).on("value",function(snapshot){
+
+let html="";
+
+snapshot.forEach(function(child){
+
+let msg=child.val();
+
+let cls=(msg.sender==sender)?"me":"other";
+
+let t=new Date(msg.time);
+
+let tm=t.getHours()+":"+
+String(t.getMinutes()).padStart(2,"0");
+
+html+=`
+<div class="message ${cls}">
+
+${msg.text}
+
+<div class="time">
+${tm}
+</div>
+
+</div>
+`;
+
+});
+
+document.getElementById("messages").innerHTML=html;
+
+document.getElementById("messages").scrollTop=
+document.getElementById("messages").scrollHeight;
+
+});
+
+function sendMessage(){
+
+let text=document.getElementById("message").value.trim();
+
+if(text=="") return;
+
+db.ref("chats/"+room).push({
+
+sender:sender,
+
+receiver:receiver,
+
+text:text,
+
+time:Date.now()
+
+});
+
+document.getElementById("message").value="";
+
+}
+
+document.getElementById("message").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+sendMessage();
+
+}
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    color:#333;
+}
+
+/* Header */
+
+.header{
+    background:#c40000;
+    color:white;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.header h1{
+    font-size:36px;
+    margin-bottom:10px;
+}
+
+.header p{
+    font-size:18px;
+}
+
+/* Hero */
+
+.hero{
+    background:white;
+    margin:20px;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+.hero h2{
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    font-size:20px;
+    color:#555;
+}
+
+/* Buttons */
+
+.buttons{
+    width:90%;
+    max-width:500px;
+    margin:20px auto;
+}
+
+.buttons button{
+    width:100%;
+    padding:18px;
+    margin:12px 0;
+    border:none;
+    border-radius:15px;
+    background:#d60000;
+    color:white;
+    font-size:22px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.buttons button:hover{
+    background:#a80000;
+    transform:scale(1.02);
+}
+
+/* Cards */
+
+.stats{
+    width:90%;
+    max-width:700px;
+    margin:30px auto;
+}
+
+.stats h2{
+    text-align:center;
+    margin-bottom:20px;
+    font-size:32px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    margin-bottom:20px;
+    border-radius:20px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+.card h3{
+    font-size:40px;
+    color:#d60000;
+}
+
+.card p{
+    font-size:22px;
+    margin-top:10px;
+}
+
+/* Notice Gallery Donation */
+
+.notice,
+.gallery,
+.donation{
+    width:90%;
+    max-width:700px;
+    margin:25px auto;
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+}
+
+.notice h2,
+.gallery h2,
+.donation h2{
+    color:#c40000;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+/* Login Signup */
+
+.form-box{
+    width:90%;
+    max-width:450px;
+    background:white;
+    margin:40px auto;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.form-box h1{
+    text-align:center;
+    color:#c40000;
+    margin-bottom:10px;
+}
+
+.form-box p{
+    text-align:center;
+    color:#666;
+    margin-bottom:25px;
+}
+
+.form-box input,
+.form-box select{
+    width:100%;
+    padding:15px;
+    margin-bottom:15px;
+    border:1px solid #ddd;
+    border-radius:12px;
+    font-size:17px;
+}
+
+.form-box button{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:#d60000;
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.form-box button:hover{
+    background:#a80000;
+}
+
+.form-box a{
+    display:block;
+    text-align:center;
+    margin-top:20px;
+    color:#d60000;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* Footer */
+
+footer{
+    background:#222;
+    color:white;
+    text-align:center;
+    padding:25px;
+    margin-top:40px;
+}
+
+footer p{
+    margin:8px 0;
+}
+
+/* Mobile */
+
+@media(max-width:600px){
+
+.header h1{
+    font-size:28px;
+}
+
+.hero h2{
+    font-size:26px;
+}
+
+.hero p{
+    font-size:17px;
+}
+
+.buttons button{
+    font-size:18px;
+}
+
+.card h3{
+    font-size:32px;
+}
+
+.card p{
+    font-size:18px;
+}
+
+}

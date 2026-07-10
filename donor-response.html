@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Accepted Donors</title>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+}
+
+header{
+background:#d90429;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+width:95%;
+max-width:700px;
+margin:auto;
+padding:15px;
+}
+
+.card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+box-shadow:0 2px 10px rgba(0,0,0,.2);
+}
+
+.card h3{
+margin:0;
+color:#d90429;
+}
+
+.card p{
+margin:6px 0;
+font-size:15px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+background:#0d6efd;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+<body>
+
+<header>
+
+<h2>✅ Accepted Donors</h2>
+
+</header>
+
+<div class="container">
+
+<div id="list">
+
+Loading...
+
+</div>
+
+</div>
+
+<script>
+
+const db = firebase.database();
+
+const list = document.getElementById("list");
+  db.ref("volunteerNotifications").on("value", function(snapshot){
+
+    let html = "";
+
+    snapshot.forEach(function(item){
+
+        let d = item.val();
+
+        html += `
+
+        <div class="card">
+
+            <h3>🩸 ${d.donorName}</h3>
+
+            <p><b>Blood Group:</b> ${d.donorBlood}</p>
+
+            <p><b>Phone:</b> ${d.donorPhone}</p>
+
+            <p><b>District:</b> ${d.donorDistrict}</p>
+
+            <hr>
+
+            <p><b>Patient:</b> ${d.patientName}</p>
+
+            <p><b>Hospital:</b> ${d.hospital}</p>
+
+            <p><b>Blood Needed:</b> ${d.bloodGroup}</p>
+
+            <p><b>Status:</b> ${d.status}</p>
+
+            <p><b>Accepted Time:</b> ${d.time}</p>
+
+            <a href="tel:${d.donorPhone}">
+
+                <button>
+
+                📞 Call Donor
+
+                </button>
+
+            </a>
+
+        </div>
+
+        `;
+
+    });
+
+    if(html==""){
+
+        html="<h3 style='text-align:center'>No Accepted Donor</h3>";
+
+    }
+
+    list.innerHTML = html;
+
+});
+  </script>
+
+</body>
+
+</html>

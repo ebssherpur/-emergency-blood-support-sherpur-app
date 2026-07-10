@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Search Donor</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+
+</head>
+
+<body>
+
+<div class="form-box">
+
+<h1>🔍 Search Donor</h1>
+
+<p>Search Approved Blood Donor</p>
+
+<select id="blood">
+
+<option value="">Select Blood Group</option>
+
+<option>A+</option>
+<option>A-</option>
+<option>B+</option>
+<option>B-</option>
+<option>AB+</option>
+<option>AB-</option>
+<option>O+</option>
+<option>O-</option>
+
+</select>
+
+<input
+type="text"
+id="district"
+placeholder="District">
+
+<button onclick="searchDonor()">
+🔍 Search Donor
+</button>
+
+</div>
+
+<div id="result" style="width:90%;max-width:500px;margin:20px auto;"></div>
+
+<script>
+
+function searchDonor(){
+
+const blood=document.getElementById("blood").value;
+const district=document.getElementById("district").value.trim().toLowerCase();
+
+const result=document.getElementById("result");
+
+result.innerHTML="";
+
+let found=false;
+
+db.ref("donors").once("value").then(function(snapshot){
+
+snapshot.forEach(function(child){
+
+const donor=child.val();
+
+if(
+
+donor.status=="Approved" &&
+donor.blood==blood &&
+donor.district &&
+donor.district.toLowerCase()==district
+
+){
+
+found=true;
+
+result.innerHTML+=`
+
+<div class="card">
+
+<h3>${donor.name}</h3>
+
+<p>🩸 Blood Group : ${donor.blood}</p>
+
+<p>📍 District : ${donor.district}</p>
+
+<p>📞 Phone : ${donor.phone}</p>
+
+<a href="tel:${donor.phone}">
+<button>📞 Call Donor</button>
+</a>
+
+</div>
+
+`;
+
+}
+
+});
+
+if(!found){
+
+result.innerHTML=`
+
+<div class="card">
+
+<h3>❌ No Donor Found</h3>
+
+<p>No Approved Donor Available.</p>
+
+</div>
+
+`;
+
+}
+
+});
+
+}
+
+</script>
+
+</body>
+
+</html>

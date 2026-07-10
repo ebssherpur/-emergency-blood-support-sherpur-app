@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood Notifications</title>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="firebase.js"></script>
+
+<style>
+body{
+    font-family:Arial;
+    background:#f5f5f5;
+    margin:0;
+}
+
+header{
+    background:#d90429;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
+
+.container{
+    width:95%;
+    max-width:700px;
+    margin:auto;
+    padding:15px;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
+button{
+    background:#0d6efd;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h2>🩸 Blood Notifications</h2>
+</header>
+
+<div class="container" id="list">
+Loading...
+</div>
+
+<script>
+
+const phone = localStorage.getItem("phone");
+
+db.ref("users/"+phone).once("value",function(userSnap){
+
+    if(!userSnap.exists()){
+        document.getElementById("list").innerHTML="User not found";
+        return;
+    }
+
+    const myBlood=userSnap.val().blood;
+
+    db.ref("notifications").on("value",function(snapshot){
+
+        let html="";
+
+        snapshot.forEach(function(item){
+
+            let n=item.val();
+
+            if(n.bloodGroup==myBlood){
+
+                html+=`
+                <div class="card">
+
+                <h3>${n.patientName}</h3>
+
+                <p><b>Blood Group:</b> ${n.bloodGroup}</p>
+
+                <p><b>Hospital:</b> ${n.hospital}</p>
+
+                <p><b>District:</b> ${n.district}</p>
+
+                <p><b>Bags:</b> ${n.bags}</p>
+
+                <p>${n.details}</p>
+
+                <a href="tel:${n.phone}">
+                <button>📞 Call Patient</button>
+                </a>
+
+                </div>
+                `;
+            }
+
+        });
+
+        if(html==""){
+            html="<h3>No Notification</h3>";
+        }
+
+        document.getElementById("list").innerHTML=html;
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

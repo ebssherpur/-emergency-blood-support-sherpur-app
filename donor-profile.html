@@ -1,0 +1,257 @@
+<!DOCTYPE html>  <html lang="en">  
+<head>  <meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>Donor Profile</title>  <link rel="stylesheet" href="style.css">  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>  <script src="firebase.js"></script>  <style>  
+  
+body{  
+margin:0;  
+font-family:Arial,sans-serif;  
+background:#f5f5f5;  
+}  
+  
+.header{  
+background:#d90429;  
+color:#fff;  
+text-align:center;  
+padding:20px;  
+}  
+  
+.profile{  
+width:90%;  
+max-width:450px;  
+margin:20px auto;  
+background:#fff;  
+border-radius:15px;  
+padding:20px;  
+box-shadow:0 0 10px rgba(0,0,0,.15);  
+}  
+  
+.profile img{  
+width:120px;  
+height:120px;  
+border-radius:50%;  
+display:block;  
+margin:auto;  
+}  
+  
+.profile h2{  
+text-align:center;  
+}  
+  
+.info p{  
+padding:10px;  
+border-bottom:1px solid #ddd;  
+}  
+  
+button{  
+width:100%;  
+padding:12px;  
+margin-top:10px;  
+border:none;  
+border-radius:10px;  
+font-size:16px;  
+color:white;  
+cursor:pointer;  
+}  
+  
+.red{  
+background:#d90429;  
+}  
+  
+.green{  
+background:green;  
+}  
+  
+.blue{  
+background:#0d6efd;  
+}  
+  
+.notice{  
+margin-top:25px;  
+padding:15px;  
+background:#fff3cd;  
+border:1px solid orange;  
+border-radius:10px;  
+}  
+  
+.notice h3{  
+margin-top:0;  
+color:#d90429;  
+}  
+  
+</style>  </head>  <body>  <div class="header">  
+<h2>🩸 Donor Profile</h2>  
+</div>  <div class="profile">  <img src="https://i.imgur.com/6VBx3io.png">  <h2 id="name">Loading...</h2>  <div class="info">  <p><b>Blood Group:</b> <span id="blood"></span></p>  <p><b>Phone:</b> <span id="phone"></span></p>  <p><b>District:</b> <span id="district"></span></p>  <p><b>Last Donation:</b> <span id="lastDonation"></span></p>  <p><b>Total Donation:</b> <span id="total">0</span></p>  <p><b>Points:</b> <span id="points">0</span></p>  </div>  <div id="notificationList">  <h3 style="text-align:center">  
+No Blood Request  
+</h3>  </div>  <button class="red"  
+onclick="window.location='blood-request.html'">
+Blood Request
+</button>
+
+<button class="red"  
+onclick="logout()">
+Logout
+</button>
+
+</div>  <script>  
+  
+const db=firebase.database();  
+  
+document.getElementById("name").innerHTML=localStorage.getItem("name");  
+document.getElementById("blood").innerHTML=localStorage.getItem("blood");  
+document.getElementById("phone").innerHTML=localStorage.getItem("phone");  
+document.getElementById("district").innerHTML=localStorage.getItem("district");  
+document.getElementById("lastDonation").innerHTML=localStorage.getItem("lastDonation");  
+  const donorBlood = localStorage.getItem("blood");  
+  
+db.ref("notifications").on("value", function(snapshot){  
+  
+    let html = "";  
+  
+    snapshot.forEach(function(item){  
+  
+        let n = item.val();  
+  
+         if(n.bloodGroup == donorBlood){
+
+    if(n.accepted){
+
+        html += `
+        <div class="notice">
+
+        <h3 style="color:green">✅ You Accepted This Request</h3>
+
+        <p><b>Patient:</b> ${n.patientName}</p>
+        <p><b>Hospital:</b> ${n.hospital}</p>
+        <p><b>Status:</b> Accepted</p>
+
+        <a href="tel:${n.phone}">
+        <button class="blue">📞 Call Patient</button>
+        </a>
+
+        </div>
+        `;
+
+    }else{
+
+        html += `
+        <div class="notice">
+
+        <h3>🩸 Blood Needed</h3>
+
+        <p><b>Patient:</b> ${n.patientName}</p>
+        <p><b>Blood Group:</b> ${n.bloodGroup}</p>
+        <p><b>Hospital:</b> ${n.hospital}</p>
+        <p><b>District:</b> ${n.district}</p>
+        <p><b>Bags:</b> ${n.bags}</p>
+        <p><b>Details:</b> ${n.details}</p>
+
+        <button class="green"
+        onclick="acceptDonate('${item.key}')">
+        ✅ Accept
+        </button>
+
+        <button class="red"
+        onclick="rejectDonate('${item.key}')">
+        ❌ Reject
+        </button>
+
+        <a href="tel:${n.phone}">
+        <button class="blue">
+        📞 Call Patient
+        </button>
+        </a>
+
+        </div>
+        `;
+    }
+}
+  
+    });  
+  
+    if(html==""){  
+        html="<h3 style='text-align:center'>No Blood Request</h3>";  
+    }  
+  
+    document.getElementById("notificationList").innerHTML=html;  
+  
+});  
+  
+function acceptDonate(id){
+
+    db.ref("notifications/"+id).once("value").then(function(snapshot){
+
+        let n = snapshot.val();
+
+        db.ref("notifications/"+id).update({
+
+            donorName: localStorage.getItem("name"),
+            donorPhone: localStorage.getItem("phone"),
+            donorBlood: localStorage.getItem("blood"),
+            donorDistrict: localStorage.getItem("district"),
+            accepted: true
+
+        });
+
+        db.ref("volunteerNotifications").push({
+
+            donorName: localStorage.getItem("name"),
+            donorPhone: localStorage.getItem("phone"),
+            donorBlood: localStorage.getItem("blood"),
+            donorDistrict: localStorage.getItem("district"),
+
+            patientName: n.patientName,
+            patientPhone: n.phone,
+            bloodGroup: n.bloodGroup,
+            hospital: n.hospital,
+            district: n.district,
+            bags: n.bags,
+            details: n.details,
+
+            status: "Accepted",
+            time: new Date().toLocaleString()
+
+        });
+db.ref("donationHistory").push({
+
+    donorName: localStorage.getItem("name"),
+    donorPhone: localStorage.getItem("phone"),
+    donorBlood: localStorage.getItem("blood"),
+    donorDistrict: localStorage.getItem("district"),
+
+    patientName: n.patientName,
+    patientPhone: n.phone,
+
+    bloodGroup: n.bloodGroup,
+    hospital: n.hospital,
+    district: n.district,
+    bags: n.bags,
+    details: n.details,
+
+    status: "Completed",
+    time: new Date().toLocaleString()
+
+});
+        alert("Blood Request Accepted");
+
+    });
+
+}
+  
+function rejectDonate(id){  
+  
+    db.ref("notifications/"+id).remove();  
+  
+    alert("Blood Request Rejected");  
+  
+}  
+  
+function logout(){  
+  
+    localStorage.clear();  
+  
+    window.location="login.html";  
+  
+}  
+  
+</script>  </body>  
+</html>

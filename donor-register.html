@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Become Donor</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+margin:0;
+}
+
+.container{
+width:90%;
+max-width:450px;
+margin:20px auto;
+background:#fff;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,.15);
+}
+
+h2{
+text-align:center;
+color:#d90429;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:1px solid #ccc;
+border-radius:8px;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#d90429;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+margin-top:10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Become Blood Donor</h2>
+
+<input type="text" id="name" placeholder="Full Name">
+
+<input type="text" id="phone" placeholder="Phone Number">
+
+<input type="email" id="email" placeholder="Email">
+
+<select id="blood">
+<option value="">Blood Group</option>
+<option>A+</option>
+<option>A-</option>
+<option>B+</option>
+<option>B-</option>
+<option>O+</option>
+<option>O-</option>
+<option>AB+</option>
+<option>AB-</option>
+</select>
+
+<input type="text" id="district" placeholder="District">
+
+<input type="text" id="thana" placeholder="Thana">
+
+<button onclick="registerDonor()">
+Register
+</button>
+
+</div>
+
+<script>
+
+function registerDonor(){
+
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let email=document.getElementById("email").value;
+let blood=document.getElementById("blood").value;
+let district=document.getElementById("district").value;
+let thana=document.getElementById("thana").value;
+
+let id=Date.now();
+
+db.ref("donors/"+id).set({
+
+name:name,
+phone:phone,
+email:email,
+blood:blood,
+district:district,
+thana:thana,
+points:0,
+status:"Pending"
+
+}).then(()=>{
+
+alert("Registration Submitted.\nWaiting For Admin Approval.");
+
+window.location="index.html";
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

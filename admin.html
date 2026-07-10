@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Panel</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f2f2f2;
+}
+
+header{
+background:#d90429;
+color:white;
+padding:15px;
+text-align:center;
+}
+
+.container{
+padding:15px;
+}
+
+.card{
+background:white;
+padding:15px;
+margin-bottom:15px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.box{
+background:#d90429;
+color:white;
+padding:20px;
+text-align:center;
+border-radius:10px;
+}
+
+.box h2{
+margin:0;
+font-size:28px;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#d90429;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#b00020;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h2>🛡 Emergency Blood Support Sherpur</h2>
+
+<p>Admin Dashboard</p>
+
+</header>
+
+<div class="container">
+  <div class="grid">
+
+<div class="box">
+<h2 id="donorCount">0</h2>
+<p>Donors</p>
+</div>
+
+<div class="box">
+<h2 id="volunteerCount">0</h2>
+<p>Volunteers</p>
+</div>
+
+<div class="box">
+<h2 id="requestCount">0</h2>
+<p>Blood Requests</p>
+</div>
+
+<div class="box">
+<h2 id="noticeCount">0</h2>
+<p>Notices</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>🛠 Admin Menu</h3>
+
+<button onclick="location.href='pending-donors.html'">
+👤 Pending Donors
+</button>
+
+<button onclick="location.href='pending-volunteers.html'">
+🙋 Pending Volunteers
+</button>
+
+<button onclick="location.href='blood-request-list.html'">
+🩸 Blood Requests
+</button>
+
+<button onclick="location.href='donor-response.html'">
+✅ Accepted Donors
+</button>
+
+<button onclick="location.href='notice.html'">
+📢 Notice Board
+</button>
+
+<button onclick="location.href='gallery.html'">
+🖼 Gallery
+</button>
+
+<button onclick="location.href='event.html'">
+🎉 Events
+</button>
+
+<button onclick="location.href='leaderboard.html'">
+🏆 Leaderboard
+</button>
+
+<button onclick="location.href='chat-list.html'">
+💬 Chat System
+</button>
+
+<button onclick="logout()">
+🚪 Logout
+</button>
+
+</div>
+<script>
+
+db.ref("donors").on("value", function(s){
+
+    document.getElementById("donorCount").innerHTML =
+    s.exists() ? s.numChildren() : 0;
+
+});
+
+db.ref("volunteers").on("value", function(s){
+
+    document.getElementById("volunteerCount").innerHTML =
+    s.exists() ? s.numChildren() : 0;
+
+});
+
+db.ref("bloodRequests").on("value", function(s){
+
+    document.getElementById("requestCount").innerHTML =
+    s.exists() ? s.numChildren() : 0;
+
+});
+
+db.ref("notice").on("value", function(s){
+
+    document.getElementById("noticeCount").innerHTML =
+    s.exists() ? s.numChildren() : 0;
+
+});
+
+function logout(){
+
+    localStorage.clear();
+
+    window.location.href = "login.html";
+
+}
+
+if(localStorage.getItem("role") != "admin"){
+
+    alert("Access Denied");
+
+    window.location.href = "login.html";
+
+}
+  </script>
+
+</div>
+
+</body>
+</html>

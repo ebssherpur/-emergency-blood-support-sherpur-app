@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Emergency Blood Support Sherpur</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<header class="header">
+<h1>🩸 Emergency Blood Support Sherpur</h1>
+<p>মানবতার সেবায় সর্বদা পাশে</p>
+</header>
+
+<section class="hero">
+<h2>রক্ত দিন, জীবন বাঁচান</h2>
+<p>Sherpur জেলার জরুরি রক্তদাতা খুঁজে পাওয়ার সহজ মাধ্যম</p>
+</section>
+
+<div class="buttons">
+
+<button id="bloodRequestBtn">
+🩸 Blood Request
+</button>
+
+<button id="donorBtn">
+❤️ Become Donor
+</button>
+
+<button id="volunteerBtn">
+👥 Become Volunteer
+</button>
+
+<button id="loginBtn">
+🔑 Login
+</button>
+
+</div>
+
+<section class="stats">
+
+<h2>আমাদের কার্যক্রম</h2>
+
+<div class="card">
+<h3 id="donorCount">0</h3>
+<p>Registered Donors</p>
+</div>
+
+<div class="card">
+<h3 id="volunteerCount">0</h3>
+<p>Volunteers</p>
+</div>
+
+<div class="card">
+<h3 id="requestCount">0</h3>
+<p>Blood Requests</p>
+</div>
+
+</section>
+
+<section class="notice">
+
+<h2>📢 Notice Board</h2>
+
+<div id="noticeList">
+কোনো নোটিশ নেই।
+</div>
+
+</section>
+
+<section class="gallery">
+
+<h2>🖼 Gallery</h2>
+
+<div id="gallery">
+Coming Soon...
+</div>
+
+</section>
+
+<section class="donation">
+
+<h2>💝 Donation</h2>
+
+<p>বিকাশ / নগদ (Coming Soon)</p>
+
+</section>
+
+<footer>
+
+<p>Emergency Blood Support Sherpur</p>
+
+<p>© 2025 All Rights Reserved</p>
+
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script src="firebase.js"></script>
+<script src="app.js"></script>
+<script>
+
+// Notice Load
+db.ref("notice").limitToLast(1).on("value", function(snapshot){
+
+let html = "কোনো নোটিশ নেই।";
+
+snapshot.forEach(function(item){
+
+let notice = item.val();
+
+html = `
+<div class="card">
+<h4>${notice.date}</h4>
+<p>${notice.text}</p>
+</div>
+`;
+
+});
+
+document.getElementById("noticeList").innerHTML = html;
+
+});
+
+</script>
+</body>
+</html>
