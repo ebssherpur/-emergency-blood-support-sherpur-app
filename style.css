@@ -233,3 +233,27 @@ footer p{
 }
 
 }
+/* ===== Back Button ===== */
+
+.topbar{
+    background:#d90429;
+    padding:12px;
+    display:flex;
+    align-items:center;
+}
+
+.back-btn{
+    background:#fff;
+    color:#d90429;
+    border:none;
+    padding:8px 15px;
+    border-radius:8px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.back-btn:hover{
+    background:#f2f2f2;
+        }
+    
