@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21' # এখানে জাভা ১৭ থেকে ২১ করে দেওয়া হলো
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
@@ -26,7 +26,6 @@ jobs:
       - name: Initialize Web Wrapper
         run: |
           mkdir www
-          # সব html, css, js এবং লোগো বা ইমেজ ফাইল www ফোল্ডারে কপি করার কমান্ড
           cp *.html www/ 2>/dev/null || true
           cp *.css www/ 2>/dev/null || true
           cp *.js www/ 2>/dev/null || true
